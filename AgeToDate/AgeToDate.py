@@ -63,7 +63,8 @@ def get_age():
             break
 
         except (IndexError):  # 入力がないとエラー（もしくはリストが３つないとエラー）
-            age2 = [0, 0, 0]  # 適当に指定
+            age2 = ["0", "0", "0"]  # 適当に指定
+            age2_str = age2[0] + "y " + age2[1] + "m " + age2[2] + "d"
             op_period = False  # 範囲指定からどうかのオプション
             break
 
@@ -110,9 +111,15 @@ def set_date():
 
 # 年齢と調査予定日から誕生日を推定
 def calc_birthday(age, base):
-    set_years = base.year - int(age[0])  # 調査予定日の年から年齢（年）を引く
-    set_months = base.month - int(age[1])  # 調査予定日の月から年齢（月）を引く
     set_days = int(age[2])  # 年齢（日）
+    set_months = base.month - int(age[1])  # 調査予定日の月から年齢（月）を引く
+
+    # 引いた月の数がマイナスになる時は、年齢からもう1年引いて、月に12ヶ月足す → 再計算
+    if set_months < 0:
+        set_years = base.year - int(age[0]) - 1
+        set_months = 12 + set_months
+    else:
+        set_years = base.year - int(age[0])  # 調査予定日の年から年齢（年）を引く
 
     # 調査予定日を基準に年齢の年・月を引いてから日を引き算
     try:
@@ -132,9 +139,15 @@ def calc_birthday(age, base):
 
 # 年齢と誕生日から調査予定日を推定
 def calc_date(age, bd):
-    set_years = bd.year + int(age[0])  # 誕生日の年から年齢（年）を足す
-    set_months = bd.month + int(age[1])  # 誕生日の月から年齢（月）を足す
     set_days = int(age[2])  # 年齢（日）
+    set_months = bd.month - int(age[1])  # 調査予定日の月から年齢（月）を引く
+
+    # 引いた月の数がマイナスになる時は、年齢からもう1年引いて、月に12ヶ月足す → 再計算
+    if set_months < 0:
+        set_years = bd.year - int(age[0]) - 1
+        set_months = 12 + set_months
+    else:
+        set_years = bd.year - int(age[0])  # 調査予定日の年から年齢（年）を引く
 
     # 誕生日を基準に年齢の年・月を足してから日を足し算
     try:
