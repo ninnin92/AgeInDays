@@ -115,7 +115,7 @@ def calc_birthday(age, base):
     set_months = base.month - int(age[1])  # 調査予定日の月から年齢（月）を引く
 
     # 引いた月の数がマイナスになる時は、年齢からもう1年引いて、月に12ヶ月足す → 再計算
-    if set_months < 0:
+    if set_months <= 0:
         set_years = base.year - int(age[0]) - 1
         set_months = 12 + set_months
     else:
@@ -140,14 +140,14 @@ def calc_birthday(age, base):
 # 年齢と誕生日から調査予定日を推定
 def calc_date(age, bd):
     set_days = int(age[2])  # 年齢（日）
-    set_months = bd.month - int(age[1])  # 調査予定日の月から年齢（月）を引く
+    set_months = bd.month + int(age[1])  # 調査予定日の月から年齢（月）を引く
 
     # 引いた月の数がマイナスになる時は、年齢からもう1年引いて、月に12ヶ月足す → 再計算
-    if set_months < 0:
-        set_years = bd.year - int(age[0]) - 1
-        set_months = 12 + set_months
+    if set_months > 12:
+        set_years = bd.year + int(age[0]) + 1
+        set_months = set_months - 12
     else:
-        set_years = bd.year - int(age[0])  # 調査予定日の年から年齢（年）を引く
+        set_years = bd.year + int(age[0])  # 調査予定日の年から年齢（年）を引く
 
     # 誕生日を基準に年齢の年・月を足してから日を足し算
     try:
